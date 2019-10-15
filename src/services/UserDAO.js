@@ -1,5 +1,6 @@
 const User = require('../models/UserModel');
 
+// TODO: faut-il utiliser this plutot que le model USER ???? À vérifier dans la doc de user.static
 User.statics = {
     getOneUserBy: async (condition) => {
         try {
