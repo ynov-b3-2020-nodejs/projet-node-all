@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = require('./UserModel')
+const userSchema = require('../services/UserDAO')
 
 // #TODO Appeler cette fonction après le mongoose.connect
 function setModels() {
