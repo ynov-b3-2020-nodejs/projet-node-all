@@ -22,7 +22,7 @@ usersSchema.statics = {
     delete: function(query, cb) {
         this.findOneAndDelete(query,cb);
     }
-}
+};
 
 const usersModel = mongoose.model('Users', usersSchema);
 module.exports = usersModel;

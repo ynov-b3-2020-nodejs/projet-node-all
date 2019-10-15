@@ -1,9 +1,13 @@
-const users = require('./users.dao');
+const Users = require('./user.dao');
 
-exports.createUser = function (req, res, next) {
+exports.createUser = function (req, res) {
     const user = {
-        name: req.body.name,
-        description: req.body.description
+        mail: req.body.mail,
+        password: req.body.password,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        isAbsent: req.body.isAbsent,
+        imageURL: req.body.imageURL
     };
 
     Users.create(user, function(err, user) {
@@ -16,7 +20,7 @@ exports.createUser = function (req, res, next) {
             message : "User created successfully"
         })
     })
-}
+};
 exports.removeUser = function(req, res, next) {
     Users.delete({_id: req.params.id}, function(err, user) {
         if(err) {
@@ -28,12 +32,16 @@ exports.removeUser = function(req, res, next) {
             message : "User deleted successfully"
         })
     })
-}
+};
 exports.updateUser = function(req, res, next) {
     const user = {
-        name: req.body.name,
-        description: req.body.description
-    }
+        mail: req.body.mail,
+        password: req.body.password,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        isAbsent: req.body.isAbsent,
+        imageURL: req.body.imageURL
+    };
     Users.update({_id: req.params.id}, user, function(err, user) {
         if(err) {
             res.json({
@@ -44,7 +52,7 @@ exports.updateUser = function(req, res, next) {
             message : "User updated successfully"
         })
     })
-}
+};
 exports.getUsers = function(req, res, next) {
     Users.get({}, function(err, users) {
         if(err) {
@@ -56,9 +64,9 @@ exports.getUsers = function(req, res, next) {
             users: users
         })
     })
-}
+};
 exports.getUser = function(req, res, next) {
-    Users.get({name: req.params.name}, function(err, users) {
+    Users.get({mail: req.params.mail}, function(err, users) {
         if(err) {
             res.json({
                 error: err
@@ -68,9 +76,4 @@ exports.getUser = function(req, res, next) {
             users: users
         })
     })
-}
-
-
-
-
-
+};
