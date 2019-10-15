@@ -20,10 +20,6 @@ User.statics = {
         }
     },
 
-    getAllUsers: function (query, cb) {
-        this.find(query, cb)
-    },
-
     deleteUser: async (userId) => {
         try {
             const userDelete = await User.deleteOne({_id: userId})
