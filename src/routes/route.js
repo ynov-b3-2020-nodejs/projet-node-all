@@ -1,4 +1,4 @@
-var Users = require('./Users.controller');
+const Users = require('./Users.controller');
 
 module.exports = function(router) {
   router.post('/create', Users.createHero);
