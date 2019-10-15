@@ -31,7 +31,7 @@ const createUser = function (req, res) {
     })
 };
 
-const deleteUser = function(req, res, next) {
+const deleteUser = function(req, res) {
     Users.delete({_id: req.params.id}, function(err, user) {
         if(err) {
             res.json({
@@ -78,9 +78,9 @@ const getAllUsers = function(req, res, next) {
     })
 };
 
-const getUserById = function(req, res, next) {
-    Users.get({mail: req.params.mail}, function(err, users) {
-        if(err) {
+const getUserById = function(req, res) {
+    Users.get({mail: req.params.mail}, function (err, users) {
+        if (err) {
             res.json({
                 error: err
             })
