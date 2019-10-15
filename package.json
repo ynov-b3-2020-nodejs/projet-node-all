@@ -1,14 +1,21 @@
 {
   "name": "projet-node-all",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "repository": "https://github.com/ynov-b3-2020-nodejs/projet-node-all.git",
   "author": "Chateauroux Guillaume <guillaume.chateauroux@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node src/index.js",
+    "prettier": "prettier --write \"src/**/*.js\"",
+    "dev": "nodemon src/index.js localhost"
   },
   "devDependencies": {
-    "prettier": "1.18.2"
+    "nodemon": "^1.19.3",
+    "prettier": "^1.18.2",
+    "dotenv": "^8.1.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
