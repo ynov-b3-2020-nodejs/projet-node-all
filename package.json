@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node index.js",
     "prettier": "prettier --write \"src/**/*.js\"",
-    "dev": "nodemon index.js localhost 8000"
+    "dev": "nodemon index.js localhost 3000"
   },
   "devDependencies": {
     "express": "^4.17.1",
