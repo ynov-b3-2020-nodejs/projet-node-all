@@ -1,10 +1,18 @@
-const Users = require('./user.dao');
+module.exports = (router) => {
+    router.put('/user', createUser);
+    router.get('/user', getAllUsers);
+    router.get('/user/:id', getUserById);
+    router.update('/user/:id', updateUser);
+    router.delete('/user/:id', deleteUser);
 
-exports.createUser = function (req, res) {
+    return router;
+}
+
+const createUser = function (req, res) {
     const user = {
         mail: req.body.mail,
         password: req.body.password,
-        firstname: req.body.firstname,
+        firstName: req.body.firstname,
         lastname: req.body.lastname,
         isAbsent: req.body.isAbsent,
         imageURL: req.body.imageURL
@@ -21,7 +29,8 @@ exports.createUser = function (req, res) {
         })
     })
 };
-exports.removeUser = function(req, res, next) {
+
+const deleteUser = function(req, res, next) {
     Users.delete({_id: req.params.id}, function(err, user) {
         if(err) {
             res.json({
@@ -33,7 +42,8 @@ exports.removeUser = function(req, res, next) {
         })
     })
 };
-exports.updateUser = function(req, res, next) {
+
+const updateUser = function(req, res, next) {
     const user = {
         mail: req.body.mail,
         password: req.body.password,
@@ -53,7 +63,8 @@ exports.updateUser = function(req, res, next) {
         })
     })
 };
-exports.getUsers = function(req, res, next) {
+
+const getAllUsers = function(req, res, next) {
     Users.get({}, function(err, users) {
         if(err) {
             res.json({
@@ -65,7 +76,8 @@ exports.getUsers = function(req, res, next) {
         })
     })
 };
-exports.getUser = function(req, res, next) {
+
+const getUserById = function(req, res, next) {
     Users.get({mail: req.params.mail}, function(err, users) {
         if(err) {
             res.json({
