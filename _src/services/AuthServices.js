@@ -8,7 +8,7 @@ const authenticationRoute = async (req, res) => {
         res.statusCode = 401;
         res.json({
             message: 'Bad password or mail'
-        })
+        });
         return
     }
 
@@ -16,8 +16,6 @@ const authenticationRoute = async (req, res) => {
     res.json({
         token: 'le token' // token récupéré par la fonction précédente
     })
-
 };
 
 module.exports = {authenticationRoute};
-
