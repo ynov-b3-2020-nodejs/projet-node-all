@@ -1,0 +1,11 @@
+{
+  "name": "projet-node-all",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ynov-b3-2020-nodejs/projet-node-all.git",
+  "author": "Chateauroux Guillaume <guillaume.chateauroux@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  }
+}
