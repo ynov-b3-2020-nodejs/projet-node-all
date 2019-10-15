@@ -8,6 +8,7 @@ module.exports = (router) => {
     return router;
 }
 
+// TODO utiliser les fonction du DAO dans chacune des routes.
 const createUser = function (req, res) {
     const user = {
         mail: req.body.mail,
