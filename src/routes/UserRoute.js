@@ -1,8 +1,8 @@
 module.exports = (router) => {
-    router.put('/user', createUser);
+    router.post('/user', createUser);
     router.get('/user', getAllUsers);
     router.get('/user/:id', getUserById);
-    router.update('/user/:id', updateUser);
+    router.put('/user/:id', updateUser);
     router.delete('/user/:id', deleteUser);
 
     return router;
