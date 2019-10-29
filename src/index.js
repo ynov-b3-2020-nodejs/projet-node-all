@@ -1,4 +1,5 @@
 const express = require('express');
+
 const app = express();
 
 if (process.env.NODE_ENV !== 'production') {
@@ -14,6 +15,5 @@ app.use(router)
 
 const port = process.env.PORT;
 app.listen(port, () => {
-  console.log(`Vous êtes bien connecté sur le port: ${port}`)
+  console.log(`Vous êtes bien connecté sur le port: ${port}`);
 });
-

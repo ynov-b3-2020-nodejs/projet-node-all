@@ -5,8 +5,8 @@ module.exports = (router) => {
     router.put('/users/:id', updateUser);
     router.delete('/users/:id', deleteUser);
 
-    return router;
-}
+  return router;
+};
 
 const UserServices = require('../services/UserServices');
 
