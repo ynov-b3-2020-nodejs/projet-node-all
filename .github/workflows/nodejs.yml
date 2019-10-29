@@ -20,7 +20,7 @@ jobs:
     - name: yarn scripts
       run: |
         yarn
-        yarn prettier-check
         yarn lint
+        yarn prettier-check
       env:
         CI: true
