@@ -1,92 +1,135 @@
 module.exports = (router) => {
-  router.post('/user', createUser);
-  router.get('/user', getAllUsers);
-  router.get('/user/:id', getUserById);
-  router.put('/user/:id', updateUser);
-  router.delete('/user/:id', deleteUser);
+    router.post('/users', createUser);
+    router.get('/users/:id', getUser);
+    router.get('/users/', getAllUsers);
+    router.put('/users/:id', updateUser);
+    router.delete('/users/:id', deleteUser);
 
   return router;
 };
 
-// TODO utiliser les fonction du DAO dans chacune des routes.
-const createUser = function (req, res) {
-  const user = {
-    mail: req.body.mail,
-    password: req.body.password,
-    firstName: req.body.firstname,
-    lastname: req.body.lastname,
-    isAbsent: req.body.isAbsent,
-    imageURL: req.body.imageURL,
-  };
+const UserServices = require('../services/UserServices');
 
-  Users.create(user, (err, user) => {
-    if (err) {
-      res.json({
-        error: err,
-      });
+
+// route: /users
+const createUser = async function (req, res) {
+    
+    const {password, ...user} = req.body;
+
+    // user.password = UserServices.encryptPassword(password);
+    user.password = password;
+
+    
+
+    const result = await UserServices.create(user);
+
+    if (result) {
+        res.json(UserServices.findOneBy({mail: user.mail}));
+    } else {
+        res.statusCode(400)
+        .json({
+            "data": {},
+            "error": {
+                "statuscode": 400,
+                "message": "400 - Impossible to create the user",
+                "return result": result
+            }
+        })
     }
-    res.json({
-      message: 'User created successfully',
-    });
-  });
 };
 
-const deleteUser = function (req, res) {
-  Users.delete({ _id: req.params.id }, (err, user) => {
-    if (err) {
-      res.json({
-        error: err,
-      });
+
+// route: /users/{id}
+const deleteUser = async function(req, res) {
+
+    const _id = req.params.id;    
+
+    const result = await UserServices.delete({_id: _id});
+
+    if (result) {
+        res.json(UserServices.findOneBy({_id: _id}));
+    } else {
+        res.statusCode(400)
+        .json({
+            "data": {},
+            "error": {
+                "statuscode": 400,
+                "message": "400 - Impossible to create the user",
+                "return result": result
+            }
+        })
     }
-    res.json({
-      message: 'User deleted successfully',
-    });
-  });
 };
 
-const updateUser = function (req, res, next) {
-  const user = {
-    mail: req.body.mail,
-    password: req.body.password,
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    isAbsent: req.body.isAbsent,
-    imageURL: req.body.imageURL,
-  };
-  Users.update({ _id: req.params.id }, user, (err, user) => {
-    if (err) {
-      res.json({
-        error: err,
-      });
+
+// route: /users/{id}
+const updateUser = async function(req, res, next) {
+
+    const _id = req.params.id;    
+    const {password, ...user} = req.body;
+
+    // user.password = UserServices.encryptPassword(password);
+    user.password = password;
+
+    const result = await UserServices.updateOne({_id: _id}, user);
+
+    if (result) {
+        res.json(await UserServices.findOneBy({_id: _id}))
+    } else {
+        res.statusCode(304)
+        .json({
+            "data": {},
+            "error": {
+                "error": 304,
+                "message": "304 - The update could not be done",
+                "return result": result
+            }
+        })
     }
-    res.json({
-      message: 'User updated successfully',
-    });
-  });
 };
 
-const getAllUsers = function (req, res, next) {
-  Users.get({}, (err, users) => {
-    if (err) {
-      res.json({
-        error: err,
-      });
+
+// route: /users/
+const getAllUsers = async function(req, res, next) {
+    const usersList = await UserServices.findManyBy({});
+
+    if (usersList) {
+        res.json(usersList);
+    } else {
+        res.statusCode(204)
+        .json({
+            "data": {},
+            "error": {
+                "statuscode": 204,
+                "message": "204 - There is nothing here",
+                "return result": result
+            }
+        })
     }
-    res.json({
-      users,
-    });
-  });
+    
 };
 
-const getUserById = function (req, res) {
-  Users.get({ mail: req.params.mail }, (err, users) => {
-    if (err) {
-      res.json({
-        error: err,
-      });
+
+// route: /users/{id}
+const getUser = async function(req, res) {
+
+    const _id = req.params.id;    
+
+    const user = await UserServices.findOneBy({_id: _id});
+
+    if (!user) {
+        res.statusCode(404)
+        .json({
+            "data": {},
+            "error": {
+                "statuscode": "404",
+                "message": "404 - user not found",
+                "return result": user
+            }
+        })
     }
+
     res.json({
-      users,
-    });
-  });
+        user
+    })
 };

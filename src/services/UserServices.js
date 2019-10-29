@@ -21,4 +21,4 @@ class UserService extends MongooseService {
     return Math.floor(Math.random() * length);
   }
 }
-module.exports = UserService;
+module.exports = new UserService();
