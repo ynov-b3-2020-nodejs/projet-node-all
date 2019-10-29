@@ -9,6 +9,7 @@ module.exports = (router) => {
 }
 
 // TODO utiliser les fonction du DAO dans chacune des routes.
+// CREATE : Gianni
 const createUser = function (req, res) {
     const user = {
         mail: req.body.mail,
@@ -31,6 +32,8 @@ const createUser = function (req, res) {
     })
 };
 
+
+// DELETE : Antoine
 const deleteUser = function(req, res) {
     Users.delete({_id: req.params.id}, function(err, user) {
         if(err) {
@@ -44,6 +47,8 @@ const deleteUser = function(req, res) {
     })
 };
 
+
+// UPDATE : Julien
 const updateUser = function(req, res, next) {
     const user = {
         mail: req.body.mail,
@@ -65,6 +70,8 @@ const updateUser = function(req, res, next) {
     })
 };
 
+
+// READ : Zakarya
 const getAllUsers = function(req, res, next) {
     Users.get({}, function(err, users) {
         if(err) {
@@ -78,6 +85,8 @@ const getAllUsers = function(req, res, next) {
     })
 };
 
+
+// READ : Zakarya
 const getUserById = function(req, res) {
     Users.get({mail: req.params.mail}, function (err, users) {
         if (err) {
