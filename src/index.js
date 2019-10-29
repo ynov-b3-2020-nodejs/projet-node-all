@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const router = require('./routes/router');
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
@@ -8,6 +7,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 require('./DB');
 
+
+const router = require('./routes/router');
 app.use(express.json())
 app.use(router)
 

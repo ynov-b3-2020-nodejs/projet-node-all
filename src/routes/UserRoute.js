@@ -1,7 +1,6 @@
 module.exports = (router) => {
     router.post('/user', createUser);
-    router.get('/user', getAllUsers);
-    router.get('/user/:id', getUserById);
+    router.get('/user', getUser);
     router.put('/user/:id', updateUser);
     router.delete('/user/:id', deleteUser);
 
@@ -22,7 +21,7 @@ const createUser = function (req, res) {
         imageURL: req.body.imageURL
     };
 
-    Users.create(user, function(err, user) {
+    /*Users.create(user, function(err, user) {
         if(err) {
             res.json({
                 error : err
@@ -32,13 +31,13 @@ const createUser = function (req, res) {
             // Do something
             message : "User created successfully"
         })
-    })
+    })*/
 };
 
 
 // DELETE : Antoine
 const deleteUser = function(req, res) {
-    Users.delete({_id: req.params.id}, function(err, user) {
+    /*Users.delete({_id: req.params.id}, function(err, user) {
         if(err) {
             res.json({
                 error : err
@@ -48,7 +47,7 @@ const deleteUser = function(req, res) {
             // Do something
             message : "User deleted successfully"
         })
-    })
+    })*/
 };
 
 
@@ -62,7 +61,7 @@ const updateUser = function(req, res, next) {
         isAbsent: req.body.isAbsent,
         imageURL: req.body.imageURL
     };
-    Users.update({_id: req.params.id}, user, function(err, user) {
+    /*Users.update({_id: req.params.id}, user, function(err, user) {
         if(err) {
             res.json({
                 error : err
@@ -70,40 +69,44 @@ const updateUser = function(req, res, next) {
         }
         res.json({
             // Do something
-            UserServices.updateOne()
+
             message : "User updated successfully"
         })
-    })
+    })*/
 };
 
 
 // READ : Zakarya
 const getAllUsers = function(req, res, next) {
-    Users.get({}, function(err, users) {
+    /*Users.get({}, function(err, users) {
         if(err) {
             res.json({
                 error: err
             })
         }
         res.json({
-            // Do something
+
             users: users
         })
-    })
+    })*/
 };
 
 
 // READ : Zakarya
-const getUserById = function(req, res) {
-    Users.get({mail: req.params.mail}, function (err, users) {
-        if (err) {
-            res.json({
-                error: err
-            })
-        }
+const getUser = async function(req, res) {
+
+    const userId = "5db7fd335dabf37080059d0f";
+
+    // Utilisation de la fonction de Mongoose findOne()
+    const user = await UserServices.findOneBy({_id: userId});
+
+    if (!user) {
         res.json({
-            // Do something
-            users: users
+            error: err
         })
+    }
+
+    res.json({
+        user
     })
 };
