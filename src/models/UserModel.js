@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
     // group: { type: 'string', required: true},
     // isLate: { type: 'boolean' },
     isAbsent: { type: 'boolean', required: true, default: false },
-    imageURL: { type: 'string'} //TODO: choisir si on stock l'image dans la BDD ou si on chope une url externe
+    imageURL: { type: 'string'}, //TODO: choisir si on stock l'image dans la BDD ou si on chope une url externe
+    __v: { type: Number, select: false}
 });
 
 module.exports = userSchema;
