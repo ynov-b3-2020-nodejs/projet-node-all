@@ -26,10 +26,14 @@ const createUser = async function (req, res) {
     if (result) {
         res.json(UserServices.findOneBy({mail: user.mail}));
     } else {
-        res.json({
-            "error": "400",
-            "message": "400 - Impossible to create the user",
-            "return result": result
+        res.statusCode(400)
+        .json({
+            "data": {},
+            "error": {
+                "statuscode": 400,
+                "message": "400 - Impossible to create the user",
+                "return result": result
+            }
         })
     }
 };
@@ -45,10 +49,14 @@ const deleteUser = async function(req, res) {
     if (result) {
         res.json(UserServices.findOneBy({_id: _id}));
     } else {
-        res.json({
-            "error": "400",
-            "message": "400 - Impossible to create the user",
-            "return result": result
+        res.statusCode(400)
+        .json({
+            "data": {},
+            "error": {
+                "statuscode": 400,
+                "message": "400 - Impossible to create the user",
+                "return result": result
+            }
         })
     }
 };
@@ -68,10 +76,14 @@ const updateUser = async function(req, res, next) {
     if (result) {
         res.json(await UserServices.findOneBy({_id: _id}))
     } else {
-        res.json({
-            "error": "304",
-            "message": "304 - The update could not be done",
-            "return result": result
+        res.statusCode(304)
+        .json({
+            "data": {},
+            "error": {
+                "error": 304,
+                "message": "304 - The update could not be done",
+                "return result": result
+            }
         })
     }
 };
@@ -84,10 +96,14 @@ const getAllUsers = async function(req, res, next) {
     if (usersList) {
         res.json(usersList);
     } else {
-        res.json({
-            "error": "204",
-            "message": "204 - There is nothing here",
-            "return result": result
+        res.statusCode(204)
+        .json({
+            "data": {},
+            "error": {
+                "statuscode": 204,
+                "message": "204 - There is nothing here",
+                "return result": result
+            }
         })
     }
     
@@ -102,10 +118,14 @@ const getUser = async function(req, res) {
     const user = await UserServices.findOneBy({_id: _id});
 
     if (!user) {
-        res.json({
-            "error": "404",
-            "message": "404 - user not found",
-            "return result": user
+        res.statusCode(404)
+        .json({
+            "data": {},
+            "error": {
+                "statuscode": "404",
+                "message": "404 - user not found",
+                "return result": user
+            }
         })
     }
 
