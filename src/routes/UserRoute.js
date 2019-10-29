@@ -8,6 +8,8 @@ module.exports = (router) => {
     return router;
 }
 
+const UserServices = require('../services/UserServices');
+
 // TODO utiliser les fonction du DAO dans chacune des routes.
 // CREATE : Gianni
 const createUser = function (req, res) {
@@ -27,6 +29,7 @@ const createUser = function (req, res) {
             })
         }
         res.json({
+            // Do something
             message : "User created successfully"
         })
     })
@@ -42,6 +45,7 @@ const deleteUser = function(req, res) {
             })
         }
         res.json({
+            // Do something
             message : "User deleted successfully"
         })
     })
@@ -65,6 +69,8 @@ const updateUser = function(req, res, next) {
             })
         }
         res.json({
+            // Do something
+            UserServices.updateOne()
             message : "User updated successfully"
         })
     })
@@ -80,6 +86,7 @@ const getAllUsers = function(req, res, next) {
             })
         }
         res.json({
+            // Do something
             users: users
         })
     })
@@ -95,6 +102,7 @@ const getUserById = function(req, res) {
             })
         }
         res.json({
+            // Do something
             users: users
         })
     })
