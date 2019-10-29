@@ -16,23 +16,6 @@ mongoose.model('User', userSchema)
 
 mongoose.connection.on('connected', async () => {
     console.log('Mongoose default connection open to ' + mongoURI)
-
-    const UserModel = mongoose.model('User')
-
-    const newUser = UserModel({
-        mail: 'mottard.maxence@gmail.com',
-        password: 'azertyuiop',
-        firstname: 'Maxence',
-        lastname: 'Mottard'
-    })
-
-    try {
-        await newUser.validate();
-        console.log(await newUser.save());
-    } catch (e) {
-        console.log(e);
-    }
-
 })
 
 
