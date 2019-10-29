@@ -17,8 +17,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12.11.1
-    - name: npm install, build, and test
+    - name: yarn scripts
       run: |
-        yarn format
+        yarn
+        yarn prettier-check
+        yarn lint
       env:
         CI: true
