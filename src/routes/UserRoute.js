@@ -1,108 +1,111 @@
 module.exports = (router) => {
-    router.post('/user', createUser);
-    router.get('/user', getUser);
-    router.put('/user/:id', updateUser);
-    router.delete('/user/:id', deleteUser);
+    router.post('/users', createUser);
+    router.get('/users/:id', getUser);
+    router.get('/users/', getAllUsers);
+    router.put('/users/:id', updateUser);
+    router.delete('/users/:id', deleteUser);
 
     return router;
 }
 
 const UserServices = require('../services/UserServices');
 
-// TODO utiliser les fonction du DAO dans chacune des routes.
-// CREATE : Gianni
-const createUser = function (req, res) {
-    const user = {
-        mail: req.body.mail,
-        password: req.body.password,
-        firstName: req.body.firstname,
-        lastname: req.body.lastname,
-        isAbsent: req.body.isAbsent,
-        imageURL: req.body.imageURL
-    };
 
-    /*Users.create(user, function(err, user) {
-        if(err) {
-            res.json({
-                error : err
-            })
-        }
+// route: /users
+const createUser = async function (req, res) {
+    
+    const {password, ...user} = req.body;
+
+    // user.password = UserServices.encryptPassword(password);
+    user.password = password;
+
+    
+
+    const result = await UserServices.create(user);
+
+    if (result) {
+        res.json(UserServices.findOneBy({mail: user.mail}));
+    } else {
         res.json({
-            // Do something
-            message : "User created successfully"
+            "error": "400",
+            "message": "400 - Impossible to create the user",
+            "return result": result
         })
-    })*/
+    }
 };
 
 
-// DELETE : Antoine
-const deleteUser = function(req, res) {
-    /*Users.delete({_id: req.params.id}, function(err, user) {
-        if(err) {
-            res.json({
-                error : err
-            })
-        }
+// route: /users/{id}
+const deleteUser = async function(req, res) {
+
+    const _id = req.params.id;    
+
+    const result = await UserServices.delete({_id: _id});
+
+    if (result) {
+        res.json(UserServices.findOneBy({_id: _id}));
+    } else {
         res.json({
-            // Do something
-            message : "User deleted successfully"
+            "error": "400",
+            "message": "400 - Impossible to create the user",
+            "return result": result
         })
-    })*/
+    }
 };
 
 
-// UPDATE : Julien
-const updateUser = function(req, res, next) {
-    const user = {
-        mail: req.body.mail,
-        password: req.body.password,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        isAbsent: req.body.isAbsent,
-        imageURL: req.body.imageURL
-    };
-    /*Users.update({_id: req.params.id}, user, function(err, user) {
-        if(err) {
-            res.json({
-                error : err
-            })
-        }
-        res.json({
-            // Do something
+// route: /users/{id}
+const updateUser = async function(req, res, next) {
 
-            message : "User updated successfully"
+    const _id = req.params.id;    
+    const {password, ...user} = req.body;
+
+    // user.password = UserServices.encryptPassword(password);
+    user.password = password;
+
+    const result = await UserServices.updateOne({_id: _id}, user);
+
+    if (result) {
+        res.json(await UserServices.findOneBy({_id: _id}))
+    } else {
+        res.json({
+            "error": "304",
+            "message": "304 - The update could not be done",
+            "return result": result
         })
-    })*/
+    }
 };
 
 
-// READ : Zakarya
-const getAllUsers = function(req, res, next) {
-    /*Users.get({}, function(err, users) {
-        if(err) {
-            res.json({
-                error: err
-            })
-        }
-        res.json({
+// route: /users/
+const getAllUsers = async function(req, res, next) {
+    const usersList = await UserServices.findManyBy({});
 
-            users: users
+    if (usersList) {
+        res.json(usersList);
+    } else {
+        res.json({
+            "error": "204",
+            "message": "204 - There is nothing here",
+            "return result": result
         })
-    })*/
+    }
+    
 };
 
 
-// READ : Zakarya
+// route: /users/{id}
 const getUser = async function(req, res) {
 
-    const userId = "5db7fd335dabf37080059d0f";
+    const _id = req.params.id;    
 
-    // Utilisation de la fonction de Mongoose findOne()
-    const user = await UserServices.findOneBy({_id: userId});
+    const user = await UserServices.findOneBy({_id: _id});
 
     if (!user) {
         res.json({
-            error: err
+            "error": "404",
+            "message": "404 - user not found",
+            "return result": user
         })
     }
 
