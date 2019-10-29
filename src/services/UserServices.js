@@ -23,4 +23,4 @@ class UserService extends MongooseService {
     };
 
 }
-module.exports = UserService;
+module.exports = new UserService();
