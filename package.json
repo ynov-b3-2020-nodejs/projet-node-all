@@ -1,19 +1,29 @@
 {
   "name": "projet-node-all",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "repository": "https://github.com/ynov-b3-2020-nodejs/projet-node-all.git",
   "author": "Chateauroux Guillaume <guillaume.chateauroux@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js",
-    "prettier": "prettier --write \"src/**/*.js\"",
-    "dev": "nodemon index.js localhost 8000"
+    "start": "node src/index.js",
+    "prettier": "prettier \"src/**/*.js\"",
+    "dev": "nodemon src/index.js localhost",
+    "lint": "eslint src/**",
+    "prettier-check": "yarn prettier --check",
+    "format": "yarn prettier --write && yarn lint --fix"
   },
   "devDependencies": {
-    "prettier": "^1.18.2",
-    "nodemon": "^1.19.3"
+    "dotenv": "^8.1.0",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "nodemon": "^1.19.3",
+    "prettier": "^1.18.2"
   },
   "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.7.7",
+    "mongoose-unique-validator": "^2.0.3"
   }
 }
