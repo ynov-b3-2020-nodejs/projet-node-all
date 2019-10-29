@@ -7,10 +7,11 @@
   "license": "MIT",
   "scripts": {
     "start": "node src/index.js",
-    "prettier": "prettier --write \"src/**/*.js\"",
+    "prettier": "prettier \"src/**/*.js\"",
     "dev": "nodemon src/index.js localhost",
     "lint": "eslint src/**",
-    "format": "yarn prettier && yarn lint --fix"
+    "prettier-check": "yarn prettier --check",
+    "format": "yarn prettier --write && yarn lint --fix"
   },
   "devDependencies": {
     "dotenv": "^8.1.0",
