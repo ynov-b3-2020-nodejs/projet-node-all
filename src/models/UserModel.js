@@ -14,3 +14,5 @@ const userSchema = new mongoose.Schema({
 });
 
 module.exports = userSchema;
+// Use this in case the top line doesn't work, to follow the guides
+// module.exports = mongoose.model('User',userSchema);
