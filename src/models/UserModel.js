@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const userSchema = new mongoose.Schema({
     mail: { type: 'string', unique: true, required: true },
@@ -13,6 +14,8 @@ const userSchema = new mongoose.Schema({
     imageURL: { type: 'string'}, //TODO: choisir si on stock l'image dans la BDD ou si on chope une url externe
     __v: { type: Number, select: false}
 });
+
+userSchema.plugin(uniqueValidator);
 
 module.exports = userSchema;
 // Use this in case the top line doesn't work, to follow the guides
