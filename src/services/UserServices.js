@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const MongooseService = require('./MongooseService');
 
 class UserService extends MongooseService {
@@ -10,7 +11,15 @@ class UserService extends MongooseService {
    * @returns {Promise<User|boolean>}
    */
   async create(userData) {
+    userData.password = await this.hashPassword(userData.password);
     return super.create(userData);
+  }
+
+  async updateOne(condition, propertiesToSet) {
+    propertiesToSet.password = await this.hashPassword(
+      propertiesToSet.password,
+    );
+    return super.updateOne(condition, propertiesToSet);
   }
 
   getRandomElementInArray(array) {
@@ -19,6 +28,10 @@ class UserService extends MongooseService {
 
   getRandomIndexInArray({ length }) {
     return Math.floor(Math.random() * length);
+  }
+
+  async hashPassword(password) {
+    return await bcrypt.hash(password, 15);
   }
 }
 module.exports = new UserService();

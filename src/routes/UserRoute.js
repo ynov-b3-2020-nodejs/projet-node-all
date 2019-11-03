@@ -1,98 +1,34 @@
-module.exports = (router) => {
-  router.post('/users', createUser);
-  router.get('/users/:id', getUser);
-  router.get('/users/', getAllUsers);
-  router.put('/users/:id', updateUser);
-  router.delete('/users/:id', deleteUser);
-
-  return router;
-};
-
+const { authenticateRoute } = require('../services/AuthServices');
 const UserServices = require('../services/UserServices');
+const {
+  bodyValidator,
+  verification,
+} = require('../services/ValidationServices');
 
 // route: /users
 const createUser = async function (req, res) {
-  const { password, ...user } = req.body;
+  const fieldsVerification = verification(req);
+  if (fieldsVerification) {
+    res.status(422).json({
+      errors: fieldsVerification,
+    });
+    return;
+  }
 
-  // user.password = UserServices.encryptPassword(password);
-  user.password = password;
+  const { ...userParams } = req.body;
+  const user = await UserServices.create(userParams);
 
-  const result = await UserServices.create(user);
-
-  if (result) {
-    res.json(UserServices.findOneBy({ mail: user.mail }));
-  } else {
-    res.statusCode(400).json({
+  if (!user) {
+    res.status(400).json({
       data: {},
-      error: {
-        statuscode: 400,
-        message: '400 - Impossible to create the user',
-        'return result': result,
+      errors: {
+        code: 'CANNOT_CREATE_USER',
       },
     });
+    return;
   }
-};
 
-// route: /users/{id}
-const deleteUser = async function (req, res) {
-  const _id = req.params.id;
-
-  const result = await UserServices.delete({ _id });
-
-  if (result) {
-    res.json(UserServices.findOneBy({ _id }));
-  } else {
-    res.statusCode(400).json({
-      data: {},
-      error: {
-        statuscode: 400,
-        message: '400 - Impossible to create the user',
-        'return result': result,
-      },
-    });
-  }
-};
-
-// route: /users/{id}
-const updateUser = async function (req, res, next) {
-  const _id = req.params.id;
-  const { password, ...user } = req.body;
-
-  // user.password = UserServices.encryptPassword(password);
-  user.password = password;
-
-  const result = await UserServices.updateOne({ _id }, user);
-
-  if (result) {
-    res.json(await UserServices.findOneBy({ _id }));
-  } else {
-    res.statusCode(304).json({
-      data: {},
-      error: {
-        error: 304,
-        message: '304 - The update could not be done',
-        'return result': result,
-      },
-    });
-  }
-};
-
-// route: /users/
-const getAllUsers = async function (req, res, next) {
-  const usersList = await UserServices.findManyBy({});
-
-  if (usersList) {
-    res.json(usersList);
-  } else {
-    res.statusCode(204).json({
-      data: {},
-      error: {
-        statuscode: 204,
-        message: '204 - There is nothing here',
-        'return result': result,
-      },
-    });
-  }
+  res.status(201).json(user);
 };
 
 // route: /users/{id}
@@ -105,14 +41,85 @@ const getUser = async function (req, res) {
     res.statusCode(404).json({
       data: {},
       error: {
-        statuscode: '404',
-        message: '404 - user not found',
-        'return result': user,
+        message: 'User not found',
+        code: 'CANNOT_FOUND_USER',
       },
     });
   }
 
-  res.json({
-    user,
-  });
+  res.json({ user });
+};
+
+// route: /users
+const getAllUsers = async function (req, res) {
+  const usersList = await UserServices.findManyBy({});
+
+  if (usersList.length > 0) {
+    res.json(usersList);
+    return;
+  }
+
+  res.status(204).json([]);
+};
+
+// route: /users/{id}
+const updateUser = async (req, res) => {
+  const fieldsVerification = verification(req);
+  if (fieldsVerification.length > 0) {
+    res.status(422).json({
+      errors: fieldsVerification,
+    });
+  }
+
+  const _id = req.params.id;
+  const { ...user } = req.body;
+
+  const result = await UserServices.updateOne({ _id }, user);
+
+  if (!result) {
+    res.statusCode(304).json({
+      data: {},
+      error: {
+        message: 'The update could not be done',
+      },
+    });
+  }
+
+  res.status(204).send();
+};
+
+// route: /users/{id}
+const deleteUser = async function (req, res) {
+  const _id = req.params.id;
+
+  const result = await UserServices.delete({ _id });
+
+  if (!result) {
+    res.status(400).json({
+      data: {},
+      error: {
+        message: 'Impossible to create the user',
+      },
+    });
+  }
+
+  res.status(204).send();
+};
+
+module.exports = (router) => {
+  router.post(
+    '/users',
+    bodyValidator(['mail', 'password', 'firstName', 'lastName']),
+    createUser,
+  );
+  router.get('/users/:id', authenticateRoute(), getUser);
+  router.get('/users/', authenticateRoute(), getAllUsers);
+  router.put(
+    '/users/:id',
+    [authenticateRoute(), bodyValidator(['mail', 'password'])],
+    updateUser,
+  );
+  router.delete('/users/:id', authenticateRoute(), deleteUser);
+
+  return router;
 };

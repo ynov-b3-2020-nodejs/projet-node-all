@@ -1,21 +1,10 @@
-const authenticationRoute = async (req, res) => {
-  const { username } = req.body;
-  const { password } = req.body;
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
-  // TODO fonction pour retrouver un user avec son email
+const authenticateRoute = () => passport.authenticate('bearer', { session: false });
 
-  if (!user || username !== user.username || password !== user.password) {
-    res.statusCode = 401;
-    res.json({
-      message: 'Bad password or mail',
-    });
-    return;
-  }
+const createToken = (user) => jwt.sign({ userId: user.id }, process.env.SECRET_KEY, {
+  expiresIn: Number(process.env.JWT_TOKEN_EXPIRATION_TIME),
+});
 
-  // TODO créer un token
-  res.json({
-    token: 'le token', // token récupéré par la fonction précédente
-  });
-};
-
-module.exports = { authenticationRoute };
+module.exports = { createToken, authenticateRoute };
