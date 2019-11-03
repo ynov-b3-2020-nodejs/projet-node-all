@@ -1,27 +1,51 @@
 const UserService = require('../services/UserServices');
 const passport = require('passport');
-const LocalStrategy = require('passport-local');
+const bcrypt = require('bcrypt');
+const {createToken} = require('../services/AuthServices');
+const BearerStrategy = require("passport-http-bearer").Strategy;
+const jwt = require('jsonwebtoken');
 
 module.exports = (router) => {
-    // #TODO connecter avec fonction du groupe B (API Custom)
-    router.post('/auth', passport.authenticate('local', {failureRedirect: '/auth'}), (req, res) => {
-        res.redirect('/');
-    });
+    router.post('/auth', authentication);
 
     return router;
 };
 
+const authentication = async (req, res) => {
+    const { mail, password } = req.body;
 
-passport.use(new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password',
-}, (email, password, done) => {
-    const user = UserService.findOneBy({email});
-    const encPassword = UserService.hashPassword(password);
+    const user = await UserService.findOneBy({mail}, ['password']);
 
-    if (!user || encPassword !== user.password) {
-        return done(null, false, {errors: {'email or password': 'is invalid'}});
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!user || !passwordMatch) {
+        res.status(401).json({
+            errors: {
+                code: "BAD_CREDENTIALS",
+                message: "Invalid password or mail"
+            }
+        });
+        return;
     }
 
-    return done(null, user);
+    const token = createToken(user);
+
+    res.json({ token });
+};
+
+passport.use( new BearerStrategy( (token, callback) => {
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
+        if (err || !decoded) {
+            callback(null, false);
+            return;
+        }
+
+        const user = await UserService.findOneBy({ _id: decoded.userId });
+
+        if (!user) {
+            callback(null, false);
+            return;
+        }
+
+        return callback(null, user);
+    });
 }));
