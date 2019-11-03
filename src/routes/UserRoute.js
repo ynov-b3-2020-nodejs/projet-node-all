@@ -1,17 +1,15 @@
 const {authenticateRoute} = require('../services/AuthServices');
+const UserServices = require("../services/UserServices");
 
 module.exports = (router) => {
   router.post("/users", createUser);
-  router.get("/users/:id", getUser);
+  router.get("/users/:id", authenticateRoute(), getUser);
   router.get("/users/", authenticateRoute(), getAllUsers);
-  router.put("/users/:id", updateUser);
-  router.delete("/users/:id", deleteUser);
+  router.put("/users/:id", authenticateRoute(), updateUser);
+  router.delete("/users/:id", authenticateRoute(), deleteUser);
 
   return router;
 };
-
-const UserServices = require("../services/UserServices");
-
 
 // route: /users
 const createUser = async function(req, res) {
