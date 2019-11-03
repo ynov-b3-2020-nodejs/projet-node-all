@@ -4,13 +4,16 @@ const BearerStrategy = require('passport-http-bearer').Strategy;
 const jwt = require('jsonwebtoken');
 const { createToken } = require('../services/AuthServices');
 const UserService = require('../services/UserServices');
-const {bodyValidator, verification} = require('../services/ValidationServices');
+const {
+  bodyValidator,
+  verification,
+} = require('../services/ValidationServices');
 
 const authentication = async (req, res) => {
   const fieldsVerification = verification(req);
-  if (!!fieldsVerification) {
+  if (fieldsVerification) {
     res.status(422).json({
-      errors: fieldsVerification
+      errors: fieldsVerification,
     });
     return;
   }
@@ -35,7 +38,7 @@ const authentication = async (req, res) => {
 };
 
 module.exports = (router) => {
-  router.post('/auth', bodyValidator([ 'mail', 'password' ]), authentication);
+  router.post('/auth', bodyValidator(['mail', 'password']), authentication);
 
   return router;
 };

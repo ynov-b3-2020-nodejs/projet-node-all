@@ -16,8 +16,10 @@ class UserService extends MongooseService {
   }
 
   async updateOne(condition, propertiesToSet) {
-    propertiesToSet.password = await this.hashPassword(propertiesToSet.password);
-    return super.updateOne(condition, propertiesToSet)
+    propertiesToSet.password = await this.hashPassword(
+      propertiesToSet.password,
+    );
+    return super.updateOne(condition, propertiesToSet);
   }
 
   getRandomElementInArray(array) {

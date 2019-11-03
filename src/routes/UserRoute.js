@@ -1,13 +1,16 @@
 const { authenticateRoute } = require('../services/AuthServices');
 const UserServices = require('../services/UserServices');
-const {bodyValidator, verification} = require('../services/ValidationServices');
+const {
+  bodyValidator,
+  verification,
+} = require('../services/ValidationServices');
 
 // route: /users
 const createUser = async function (req, res) {
   const fieldsVerification = verification(req);
-  if (!!fieldsVerification) {
+  if (fieldsVerification) {
     res.status(422).json({
-      errors: fieldsVerification
+      errors: fieldsVerification,
     });
     return;
   }
@@ -39,7 +42,7 @@ const getUser = async function (req, res) {
       data: {},
       error: {
         message: 'User not found',
-        code: "CANNOT_FOUND_USER"
+        code: 'CANNOT_FOUND_USER',
       },
     });
   }
@@ -64,26 +67,25 @@ const updateUser = async (req, res) => {
   const fieldsVerification = verification(req);
   if (fieldsVerification.length > 0) {
     res.status(422).json({
-      errors: fieldsVerification
-    })
+      errors: fieldsVerification,
+    });
   }
 
   const _id = req.params.id;
-  const {...user} = req.body;
+  const { ...user } = req.body;
 
-  const result = await UserServices.updateOne({_id: _id}, user);
+  const result = await UserServices.updateOne({ _id }, user);
 
   if (!result) {
-    res.statusCode(304)
-      .json({
-        "data": {},
-        "error": {
-          "message": "The update could not be done"
-        }
-      })
+    res.statusCode(304).json({
+      data: {},
+      error: {
+        message: 'The update could not be done',
+      },
+    });
   }
 
-  res.status(204).send()
+  res.status(204).send();
 };
 
 // route: /users/{id}
@@ -96,7 +98,7 @@ const deleteUser = async function (req, res) {
     res.status(400).json({
       data: {},
       error: {
-        message: 'Impossible to create the user'
+        message: 'Impossible to create the user',
       },
     });
   }
@@ -104,12 +106,19 @@ const deleteUser = async function (req, res) {
   res.status(204).send();
 };
 
-
 module.exports = (router) => {
-  router.post('/users', bodyValidator(['mail', 'password', 'firstName', 'lastName']), createUser);
+  router.post(
+    '/users',
+    bodyValidator(['mail', 'password', 'firstName', 'lastName']),
+    createUser,
+  );
   router.get('/users/:id', authenticateRoute(), getUser);
   router.get('/users/', authenticateRoute(), getAllUsers);
-  router.put('/users/:id', [authenticateRoute(), bodyValidator(['mail', 'password'])], updateUser);
+  router.put(
+    '/users/:id',
+    [authenticateRoute(), bodyValidator(['mail', 'password'])],
+    updateUser,
+  );
   router.delete('/users/:id', authenticateRoute(), deleteUser);
 
   return router;
