@@ -15,6 +15,13 @@ class UserService extends MongooseService {
     return super.create(userData);
   }
 
+  async updateOne(condition, propertiesToSet) {
+    propertiesToSet.password = await this.hashPassword(
+      propertiesToSet.password,
+    );
+    return super.updateOne(condition, propertiesToSet);
+  }
+
   getRandomElementInArray(array) {
     return array[this.getRandomIndexInArray(array)];
   }
