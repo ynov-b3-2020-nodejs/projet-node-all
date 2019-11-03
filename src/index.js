@@ -8,10 +8,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 require('./DB');
 
-
 const router = require('./routes/router');
-app.use(express.json())
-app.use(router)
+
+app.use(express.json());
+app.use(router);
 
 const port = process.env.PORT;
 app.listen(port, () => {

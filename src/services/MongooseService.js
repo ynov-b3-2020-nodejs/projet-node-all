@@ -7,9 +7,9 @@ class MongooseService {
 
   async findOneBy(condition, hiddenPropertiesToSelect = []) {
     try {
-      return await this.model.findOne(condition).select(hiddenPropertiesToSelect.map( property => {
-        return `+${property}`;
-      }));
+      return await this.model.findOne(condition).select(
+        hiddenPropertiesToSelect.map((property) => `+${property}`),
+      );
     } catch (e) {
       return false;
     }
