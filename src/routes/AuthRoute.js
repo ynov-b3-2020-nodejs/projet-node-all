@@ -32,9 +32,15 @@ const authentication = async (req, res) => {
     return;
   }
 
-  const token = createToken(user);
+  try {
+    const token = createToken(user);
 
-  res.json({ token });
+    res.json({ token });
+  } catch (error) {
+    console.error('There is a problem while gerenating the token. Please check you .env and refer to .env.example !');
+    console.log(error);
+    console.error('There is a problem while gerenating the token. Please check you .env and refer to .env.example !');
+  }
 };
 
 module.exports = (router) => {
