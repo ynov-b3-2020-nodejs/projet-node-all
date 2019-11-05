@@ -21,8 +21,18 @@ const authentication = async (req, res) => {
   const { mail, password } = req.body;
   const user = await UserService.findOneBy({ mail }, ['password']);
 
+  if (!user) {
+    res.status(401).json({
+      errors: {
+        code: 'BAD_CREDENTIALS',
+        message: 'Invalid password or mail',
+      },
+    });
+    return;
+  }
+
   const passwordMatch = await bcrypt.compare(password, user.password);
-  if (!user || !passwordMatch) {
+  if (!passwordMatch) {
     res.status(401).json({
       errors: {
         code: 'BAD_CREDENTIALS',
