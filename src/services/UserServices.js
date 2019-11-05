@@ -12,7 +12,9 @@ class UserService extends MongooseService {
    */
   async create(userData) {
     userData.password = await this.hashPassword(userData.password);
-    return super.create(userData);
+    const {password, ...user} = (await super.create(userData)).toJSON({ versionKey: false });
+
+    return user;
   }
 
   async updateOne(condition, propertiesToSet) {
