@@ -20,7 +20,7 @@ const createUser = async function (req, res) {
 
   if (!user) {
     res.status(400).json({
-      data: {},
+      message: 'Cannot create user',
       errors: {
         code: 'CANNOT_CREATE_USER',
       },
@@ -38,7 +38,7 @@ const getUser = async function (req, res) {
   const user = await UserServices.findOneBy({ _id });
 
   if (!user) {
-    res.statusCode(404).json({
+    res.status(404).json({
       data: {},
       error: {
         message: 'User not found',
@@ -77,7 +77,7 @@ const updateUser = async (req, res) => {
   const result = await UserServices.updateOne({ _id }, user);
 
   if (!result) {
-    res.statusCode(304).json({
+    res.status(304).json({
       data: {},
       error: {
         message: 'The update could not be done',
