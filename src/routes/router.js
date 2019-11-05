@@ -8,4 +8,3 @@ router = UserRoutes(router);
 router = AuthRoutes(router);
 
 module.exports = router;
-
